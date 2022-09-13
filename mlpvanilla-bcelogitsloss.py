@@ -213,7 +213,7 @@ results["3hr"]['fn'] = int(FN)
 
 CLUSTERID = int(os.environ.get('CLUSTERID'))
 PROCID = int(os.environ.get('PROCID'))
-json_loc = here / f'{CLUSTERID}-{PROCID}-mlpvanilla-mseloss.json'
+json_loc = here / f'{CLUSTERID}-{PROCID}-mlpvanilla-bcelogitsloss.json'
 
 with open(json_loc, 'wt', encoding="utf-8") as f:
     json.dump(results, f)
