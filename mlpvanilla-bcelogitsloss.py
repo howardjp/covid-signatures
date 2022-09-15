@@ -22,11 +22,11 @@ TRNVALSPLIT = 0.8
 
 logger = ConsoleLogger("mlpvanilla-bcelogitsloss.py", multithreaded=True, stdout=True, colored=True)
 
-TORCHSEED = 10#int(os.environ.get('TORCHSEED'))
+TORCHSEED = int(os.environ.get('TORCHSEED'))
 logger.info(f'Setting torch.manual_seed to {TORCHSEED}')
 torch.manual_seed(TORCHSEED)
 
-NPSEED = 10#int(os.environ.get('NPSEED'))
+NPSEED = int(os.environ.get('NPSEED'))
 logger.info(f'Setting np.random.seed to {NPSEED}')
 np.random.seed(NPSEED)
 
