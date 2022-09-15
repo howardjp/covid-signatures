@@ -99,7 +99,7 @@ logger.info(f'Found learning rate of {lrfinder.get_best_lr()}, using learning ra
 model.optimizer.set_lr(learn_rate)
 
 epochs = 512
-callbacks = [tt.callbacks.EarlyStopping(patience=10)]
+callbacks = [tt.callbacks.EarlyStopping(patience=25)]
 verbose = True
 
 log = model.fit(x_trn, y_trn, batch_size, epochs, callbacks, verbose, val_data=val)
@@ -218,9 +218,10 @@ results["24hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["24hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["24hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["24hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
+results["24hr"]['preds'] = surv.to_dict()
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
-alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration < (alldata_tmp.maxtime - 11)].index)
+alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 11].index)
 alldata_tst = pd.merge(left=iddata_tst.drop(columns="event"), right=alldata_tmp.drop(columns="maxtime"), left_on='id', right_on='id').drop(columns=["id"]).astype({'event': int})
 
 durations_test, events_test = get_target(alldata_tst)
@@ -242,9 +243,10 @@ results["12hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["12hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["12hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["12hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
+results["12hr"]['preds'] = surv.to_dict()
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
-alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration < (alldata_tmp.maxtime - 5)].index)
+alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 5].index)
 alldata_tst = pd.merge(left=iddata_tst.drop(columns="event"), right=alldata_tmp.drop(columns="maxtime"), left_on='id', right_on='id').drop(columns=["id"]).astype({'event': int})
 
 durations_test, events_test = get_target(alldata_tst)
@@ -266,9 +268,10 @@ results["6hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["6hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["6hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["6hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
+results["6hr"]['preds'] = surv.to_dict()
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
-alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration < (alldata_tmp.maxtime - 2)].index)
+alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 3].index)
 alldata_tst = pd.merge(left=iddata_tst.drop(columns="event"), right=alldata_tmp.drop(columns="maxtime"), left_on='id', right_on='id').drop(columns=["id"]).astype({'event': int})
 
 durations_test, events_test = get_target(alldata_tst)
@@ -290,6 +293,7 @@ results["3hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["3hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["3hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["3hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
+results["3hr"]['preds'] = surv.to_dict()
 
 CLUSTERID = int(os.environ.get('CLUSTERID'))
 PROCID = int(os.environ.get('PROCID'))
