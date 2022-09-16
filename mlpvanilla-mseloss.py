@@ -94,6 +94,8 @@ verbose = True
 
 log = model.fit(x_trn, y_trn, batch_size, epochs, callbacks, verbose, val_data=val)
 
+results = dict()
+
 maxtimes_by_id = pd.DataFrame(alldata.groupby(['id'], sort=False)['duration'].max())
 maxtimes_by_id.rename(columns={"id": "id", "duration": "maxtime"}, inplace=True)
 
