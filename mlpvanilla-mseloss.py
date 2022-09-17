@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import torch
 
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, FunctionTransformer, Normalizer
 from sklearn_pandas import DataFrameMapper
