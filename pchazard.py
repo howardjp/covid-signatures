@@ -254,7 +254,7 @@ results["3hr"]['iloc'] = surv.iloc().obj.to_dict()
 
 CLUSTERID = int(os.environ.get('CLUSTERID'))
 PROCID = int(os.environ.get('PROCID'))
-json_loc = here / f'{CLUSTERID}-{PROCID}-logistic.cbor'
+json_loc = here / f'{CLUSTERID}-{PROCID}-pchazard.cbor'
 
 with open(json_loc, 'wb') as f:
     cbor2.dump(results, f)
