@@ -1,4 +1,5 @@
 import json
+import cbor2
 import numpy as np
 import os
 import pathlib
@@ -253,7 +254,9 @@ results["3hr"]['iloc'] = surv.iloc().obj.to_dict()
 
 CLUSTERID = int(os.environ.get('CLUSTERID'))
 PROCID = int(os.environ.get('PROCID'))
-json_loc = here / f'{CLUSTERID}-{PROCID}-pchazard.json'
+json_loc = here / f'{CLUSTERID}-{PROCID}-logistic.cbor'
 
-with open(json_loc, 'wt', encoding="utf-8") as f:
-    json.dump(results, f)
+with open(json_loc, 'wb') as f:
+    cbor2.dump(results, f)
+
+logger.info(f'Done.')
