@@ -20,6 +20,13 @@ MAXPATIENTS = 1
 TRNTSTSPLIT = 0.8
 TRNVALSPLIT = 0.8
 
+if 'interactive_mode' in globals():
+    if interactive_mode == True:
+        os.environ["TORCHSEED"] = "1"
+        os.environ["NPSEED"] = "1"
+        os.environ["CLUSTERID"] = "1"
+        os.environ["PROCID"] = "1"
+
 logger = ConsoleLogger("mtlr.py", multithreaded=True, stdout=True, colored=True)
 
 TORCHSEED = int(os.environ.get('TORCHSEED'))
@@ -191,11 +198,15 @@ results["72hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["72hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["72hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["72hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
+results["72hr"]['iloc'] = surv.iloc().obj.to_dict()
 
 maxtimes_by_id = pd.DataFrame(alldata.groupby(['id'], sort=False)['duration'].max())
 maxtimes_by_id.rename(columns={"id": "id", "duration": "maxtime"}, inplace=True)
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
+alldata_tru = alldata_tmp[['event', 'duration']]
+results["test-truth"] = alldata_tru.to_dict()
+
 alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration < (alldata_tmp.maxtime - 23)].index)
 alldata_tst = pd.merge(left=iddata_tst.drop(columns="event"), right=alldata_tmp.drop(columns="maxtime"), left_on='id', right_on='id').drop(columns=["id"]).astype({'event': int})
 
@@ -219,6 +230,7 @@ results["24hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["24hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["24hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
 results["24hr"]['preds'] = surv.to_dict()
+results["24hr"]['iloc'] = surv.iloc().obj.to_dict()
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
 alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 11].index)
@@ -244,6 +256,7 @@ results["12hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["12hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["12hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
 results["12hr"]['preds'] = surv.to_dict()
+results["12hr"]['iloc'] = surv.iloc().obj.to_dict()
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
 alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 5].index)
@@ -269,6 +282,7 @@ results["6hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["6hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["6hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
 results["6hr"]['preds'] = surv.to_dict()
+results["6hr"]['iloc'] = surv.iloc().obj.to_dict()
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
 alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 3].index)
@@ -294,6 +308,7 @@ results["3hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["3hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["3hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
 results["3hr"]['preds'] = surv.to_dict()
+results["3hr"]['iloc'] = surv.iloc().obj.to_dict()
 
 CLUSTERID = int(os.environ.get('CLUSTERID'))
 PROCID = int(os.environ.get('PROCID'))
