@@ -78,8 +78,10 @@ labtrans = CoxTime.label_transform()
 get_target = lambda df: (df['duration'].values, df['event'].values)
 y_trn = labtrans.fit_transform(*get_target(alldata_trn))
 y_val = labtrans.transform(*get_target(alldata_val))
-durations_test, events_test = get_target(alldata_tst)
 val = tt.tuplefy(x_val, y_val)
+
+durations_test, events_test = get_target(alldata_tst)
+durations_all, events_all = get_target(alldata_tst)
 
 in_features = x_trn.shape[1]
 num_nodes = [64, 64]
@@ -132,17 +134,14 @@ results["72hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["72hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["72hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["72hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
-results["72hr"]['preds'] = surv.to_dict()
 results["72hr"]['iloc'] = surv.iloc().obj.to_dict()
+results["72hr"]['truth'] = events_test.tolist()
 
 maxtimes_by_id = pd.DataFrame(alldata.groupby(['id'], sort=False)['duration'].max())
 maxtimes_by_id.rename(columns={"id": "id", "duration": "maxtime"}, inplace=True)
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
-alldata_tru = alldata_tmp[['event', 'duration']]
-results["test-truth"] = alldata_tru.to_dict()
-
-alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 23].index)
+alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration != 24].index)
 alldata_tst = pd.merge(left=iddata_tst.drop(columns="event"), right=alldata_tmp.drop(columns="maxtime"), left_on='id', right_on='id').drop(columns=["id"]).astype({'event': int})
 
 durations_test, events_test = get_target(alldata_tst)
@@ -151,8 +150,7 @@ surv = model.predict_surv_df(x_tst)
 
 ev = EvalSurv(surv, durations_test, events_test, censor_surv='km')
 logger.info(f'Found 24-hour concordance_td: {ev.concordance_td()}')
-time_grid = np.linspace(durations_test.min(), durations_test.max(), 100)
-_ = ev.brier_score(time_grid).plot()
+time_grid = np.linspace(durations_all.min(), durations_all.max(), 100)
 
 logger.info(f'Found 24-hour integrated_brier_score: {ev.integrated_brier_score(time_grid)}')
 logger.info(f'Found 24-hour integrated_nbll: {ev.integrated_nbll(time_grid)}')
@@ -164,11 +162,11 @@ results["24hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["24hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["24hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["24hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
-results["24hr"]['preds'] = surv.to_dict()
 results["24hr"]['iloc'] = surv.iloc().obj.to_dict()
+results["24hr"]['truth'] = events_test.tolist()
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
-alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 11].index)
+alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration != 12].index)
 alldata_tst = pd.merge(left=iddata_tst.drop(columns="event"), right=alldata_tmp.drop(columns="maxtime"), left_on='id', right_on='id').drop(columns=["id"]).astype({'event': int})
 
 durations_test, events_test = get_target(alldata_tst)
@@ -177,8 +175,7 @@ surv = model.predict_surv_df(x_tst)
 
 ev = EvalSurv(surv, durations_test, events_test, censor_surv='km')
 logger.info(f'Found 12-hour concordance_td: {ev.concordance_td()}')
-time_grid = np.linspace(durations_test.min(), durations_test.max(), 100)
-_ = ev.brier_score(time_grid).plot()
+time_grid = np.linspace(durations_all.min(), durations_all.max(), 100)
 
 logger.info(f'Found 12-hour integrated_brier_score: {ev.integrated_brier_score(time_grid)}')
 logger.info(f'Found 12-hour integrated_nbll: {ev.integrated_nbll(time_grid)}')
@@ -190,11 +187,11 @@ results["12hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["12hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["12hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["12hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
-results["12hr"]['preds'] = surv.to_dict()
 results["12hr"]['iloc'] = surv.iloc().obj.to_dict()
+results["12hr"]['truth'] = events_test.tolist()
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
-alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 5].index)
+alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration != 6].index)
 alldata_tst = pd.merge(left=iddata_tst.drop(columns="event"), right=alldata_tmp.drop(columns="maxtime"), left_on='id', right_on='id').drop(columns=["id"]).astype({'event': int})
 
 durations_test, events_test = get_target(alldata_tst)
@@ -203,8 +200,7 @@ surv = model.predict_surv_df(x_tst)
 
 ev = EvalSurv(surv, durations_test, events_test, censor_surv='km')
 logger.info(f'Found 6-hour concordance_td: {ev.concordance_td()}')
-time_grid = np.linspace(durations_test.min(), durations_test.max(), 100)
-_ = ev.brier_score(time_grid).plot()
+time_grid = np.linspace(durations_all.min(), durations_all.max(), 100)
 
 logger.info(f'Found 6-hour integrated_brier_score: {ev.integrated_brier_score(time_grid)}')
 logger.info(f'Found 6-hour integrated_nbll: {ev.integrated_nbll(time_grid)}')
@@ -216,11 +212,11 @@ results["6hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["6hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["6hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["6hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
-results["6hr"]['preds'] = surv.to_dict()
 results["6hr"]['iloc'] = surv.iloc().obj.to_dict()
+results["6hr"]['truth'] = events_test.tolist()
 
 alldata_tmp = pd.merge(left=alldata, right=maxtimes_by_id, left_on='id', right_on='id')
-alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration == 2].index)
+alldata_tmp = alldata_tmp.drop(alldata_tmp[alldata_tmp.duration != 3].index)
 alldata_tst = pd.merge(left=iddata_tst.drop(columns="event"), right=alldata_tmp.drop(columns="maxtime"), left_on='id', right_on='id').drop(columns=["id"]).astype({'event': int})
 
 durations_test, events_test = get_target(alldata_tst)
@@ -229,8 +225,7 @@ surv = model.predict_surv_df(x_tst)
 
 ev = EvalSurv(surv, durations_test, events_test, censor_surv='km')
 logger.info(f'Found 3-hour concordance_td: {ev.concordance_td()}')
-time_grid = np.linspace(durations_test.min(), durations_test.max(), 100)
-_ = ev.brier_score(time_grid).plot()
+time_grid = np.linspace(durations_all.min(), durations_all.max(), 100)
 
 logger.info(f'Found 3-hour integrated_brier_score: {ev.integrated_brier_score(time_grid)}')
 logger.info(f'Found 3-hour integrated_nbll: {ev.integrated_nbll(time_grid)}')
@@ -242,14 +237,14 @@ results["3hr"]['ibs'] = ev.integrated_brier_score(time_grid)
 results["3hr"]['inbll'] = ev.integrated_nbll(time_grid)
 results["3hr"]['bs'] = ev.brier_score(time_grid).to_numpy().tolist()
 results["3hr"]['nbll'] = ev.nbll(time_grid).to_numpy().tolist()
-results["3hr"]['preds'] = surv.to_dict()
 results["3hr"]['iloc'] = surv.iloc().obj.to_dict()
+results["3hr"]['truth'] = events_test.tolist()
 
 CLUSTERID = int(os.environ.get('CLUSTERID'))
 PROCID = int(os.environ.get('PROCID'))
-json_loc = here / f'{CLUSTERID}-{PROCID}-coxtime.cbor'
+json_loc = here / f'{CLUSTERID}-{PROCID}-coxtime.json'
 
-with open(json_loc, 'wb') as f:
-    cbor2.dump(results, f)
+with open(json_loc, 'wt') as f:
+    json.dump(results, f)
 
 logger.info(f'Done.')
