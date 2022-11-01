@@ -1,6 +1,5 @@
 MAXTIMEINICU <- 72
 
-library("data.table")
 library("jsonlite")
 library("glue")
 library("here")
