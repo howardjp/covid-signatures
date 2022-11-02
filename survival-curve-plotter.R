@@ -1,11 +1,17 @@
 MAXTIMEINICU <- 72
 
+install.packages("jsonlite")
+install.packages("glue")
+install.packages("here")
+install.packages("logger")
+install.packages("readr")
+install.packages("reshape2")
+
 library("jsonlite")
 library("glue")
 library("here")
 library("logger")
 library("readr")
-library("zoo")
 library("ggplot2")
 library("reshape2")
 
