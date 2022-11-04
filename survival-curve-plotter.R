@@ -1,5 +1,12 @@
 MAXTIMEINICU <- 72
 
+CLUSTERID <- Sys.getenv("CLUSTERID")
+PROCID <- Sys.getenv("PROCID")
+METHOD <- Sys.getenv("METHOD")
+R_LIBS_USER <- Sys.getenv("R_LIBS_USER")
+
+.libPaths(R_LIBS_USER)
+
 install.packages("jsonlite")
 install.packages("glue")
 install.packages("here")
@@ -14,10 +21,6 @@ library("logger")
 library("readr")
 library("ggplot2")
 library("reshape2")
-
-CLUSTERID <- Sys.getenv("CLUSTERID")
-PROCID <- Sys.getenv("PROCID")
-METHOD <- Sys.getenv("METHOD")
 
 base_base_loc <- here("data")
 base_loc <- here(base_base_loc, "sepsis")
