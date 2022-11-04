@@ -8,6 +8,7 @@ R_LIBS_USER <- Sys.getenv("R_LIBS_USER")
 .libPaths(R_LIBS_USER)
 
 install.packages("jsonlite")
+install.packages("ggplot2")
 install.packages("glue")
 install.packages("here")
 install.packages("logger")
