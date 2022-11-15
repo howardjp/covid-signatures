@@ -85,6 +85,7 @@ val = (x_val, y_val)
 
 # We don't need to transform the test labels
 durations_test, events_test = get_target(alldata_tst)
+durations_all, events_all = get_target(alldata_tst)
 
 in_features = x_trn.shape[1]
 out_features = labtrans.out_features
