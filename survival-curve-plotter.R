@@ -282,3 +282,8 @@ p_roc <- ggplot() +
   theme(legend.position="bottom")
 print(p_roc)
 ggsave(here(glue::glue(CLUSTERID, "-", PROCID, "-", METHOD, "-collected-ROC.pdf")), p_roc)
+
+write.csv(roc.time3, here(glue::glue(CLUSTERID, "-", PROCID, "-", METHOD, "-24hr-ROC.csv")), row.names = FALSE)
+write.csv(roc.time3, here(glue::glue(CLUSTERID, "-", PROCID, "-", METHOD, "-12hr-ROC.csv")), row.names = FALSE)
+write.csv(roc.time3, here(glue::glue(CLUSTERID, "-", PROCID, "-", METHOD, "-06hr-ROC.csv")), row.names = FALSE)
+write.csv(roc.time3, here(glue::glue(CLUSTERID, "-", PROCID, "-", METHOD, "-03hr-ROC.csv")), row.names = FALSE)
