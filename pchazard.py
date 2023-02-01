@@ -18,7 +18,7 @@ from pycox.models import PCHazard
 from pycox.evaluation import EvalSurv
 
 MAXPATIENTS = 1
-TRNTSTSPLIT = 0.2
+TRNTSTSPLIT = 0.8
 TRNVALSPLIT = 0.8
 
 if 'interactive_mode' in globals():
